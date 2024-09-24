@@ -1,0 +1,6 @@
+{
+  "tasks": {
+    "dev": "deno run --allow-all --watch src/app.ts"
+  },
+  "imports": { "@std/path": "jsr:@std/path@^1.0.6" }
+}

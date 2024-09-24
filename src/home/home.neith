@@ -1,0 +1,18 @@
+@import('navbar.neith')
+@provide('auth.ts') as Auth
+
+<script lang="ts">
+    let stat: string = ''
+</script>
+
+<navbar />
+<div huh="huh">
+    <h1>hi</h1>
+    <input type="text" bind:value="stat"/>
+
+    <div>
+        <list />
+    </div>
+</div>
+
+<button on:click="submit()">Submit</button>
