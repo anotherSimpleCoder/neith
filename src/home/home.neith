@@ -1,18 +1,17 @@
-@import('navbar.neith')
-@provide('auth.ts') as Auth
+@import('navbar.neith') as navbar
 
 <script lang="ts">
-    let stat: string = ''
+    class Person {
+        constructor(private name: string) {}
+    }
+    let stat: string = '';
+    console.log("nigga balls")
 </script>
 
 <navbar />
-<div huh="huh">
+<div>
     <h1>hi</h1>
     <input type="text" bind:value="stat"/>
-
-    <div>
-        <list />
-    </div>
 </div>
 
 <button on:click="submit()">Submit</button>

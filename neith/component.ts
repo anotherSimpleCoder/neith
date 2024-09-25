@@ -1,7 +1,5 @@
-export interface INeithComponent {
-    name: string,
-    templatePath: string,
-    stylePath: string
+export interface NeithComponent {
+    html: string,
+    css: string,
+    js: string
 }
-
-export type NeithComponent = new () => INeithComponent

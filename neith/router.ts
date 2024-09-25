@@ -1,13 +1,14 @@
 import { NeithComponent } from "./component.ts";
+import { Neith } from "./neith.ts";
 import { Renderer } from "./renderer.ts";
 
 export interface Route {
     path: string,
-    component: NeithComponent
+    component: string
 }
 
 export class NeithRouter {
-    routes: Map<string, NeithComponent>
+    routes: Map<string, string>
 
     constructor(
         routeArray: Route[]
@@ -22,23 +23,13 @@ export class NeithRouter {
 
     async route(req: Request): Promise<Response> {
         const url: URL = new URL(req.url)
-        if(url.pathname === '/style.css') {
-            return new Response(await Renderer.renderCSS(), {
-                headers: {
-                    'Content-Type': 'text/css'
-                }
-            })
-        }
 
-        const pathComponent = this.routes.get(url.pathname)
-        if(!pathComponent) {
+        const documentPath = this.routes.get(url.pathname)
+        if(!documentPath) {
             return new Response("404: Not Found!")
         }
+        const document = await Neith.build(documentPath)
 
-        return new Response(await Renderer.renderHTML(pathComponent), {
-            headers: {
-                'Content-Type': 'text/html'
-            }
-        })
+        return new Response(new TextEncoder().encode(document.html))
     }
 }
