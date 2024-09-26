@@ -1,7 +1,7 @@
 import * as xml from "https://deno.land/x/xml@5.4.16/mod.ts";
 import {JSDOM} from 'npm:jsdom'
 import { DOMParser, HTMLDocument, Element } from "jsr:@b-fuze/deno-dom";
-import { join, isAbsolute } from "@std/path";
+import { join, isAbsolute } from "jsr:@std/path@^1.0.6";
 import { NeithComponent } from "./component.ts";
 import { NeithIOC } from "./neith-ioc.ts";
 import { NeithCLI } from "./neith.cli.ts";
@@ -11,7 +11,7 @@ import {routes} from '../src/routes.ts'
 import { NeithProp, isNeithProp, handleNeithProp } from "./neith-props.ts";
 import { NeithJSCompiler } from "./neith-js-compiler.ts";
 import { NeithCSSCompiler } from "./neith-css-compiler.ts";
-
+import hash from "https://deno.land/x/object_hash@2.0.3.1/mod.ts";
 
 export interface NeithElement {
     tag: string,
@@ -175,8 +175,20 @@ export class Neith {
             pureNode.tag = 'div'
         }
 
+        if(node.tag === 'style') {
+            return this.compileCSS(node)
+        }
+
         if(node.tag === 'script') {
             return this.compileTypescript(node)
+        }
+        
+        if(node.text.match(/\{[^}]*\}/)) {
+            const varName = node.text.replace(/\{(\w+)\}/g, "$1")
+            const id = hash(varName)
+            node.props.push({name: 'id', value: id})
+            this.jsCompiler.simpleBind(id, varName)
+            node.text = ''
         }
 
         for(const prop of node.props) {
@@ -264,13 +276,17 @@ export class Neith {
     }
 
     private compileTypescript(node: NeithElement): NeithElement {
-        // return {
-        //     tag: 'script',
-        //     text: (await transform(typescript, {loader: 'ts', format: 'esm'})).code,
-        //     children: [],
-        //     props: []
-        // }
         this.jsCompiler.handleScriptTag(node)
+        return {
+            tag: 'div',
+            text: '',
+            children: [],
+            props: []
+        }
+    }
+
+    private compileCSS(node: NeithElement): NeithElement {
+        this.cssCompiler.handleStyleTag(node)
         return {
             tag: 'div',
             text: '',

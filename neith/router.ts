@@ -1,6 +1,5 @@
 import { NeithComponent } from "./component.ts";
 import { Neith } from "./neith.ts";
-import { Renderer } from "./renderer.ts";
 
 export interface Route {
     path: string,

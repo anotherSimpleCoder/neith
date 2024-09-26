@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "dev": "deno run --v8-flags=--max-old-space-size=8000 --allow-all --watch src/app.ts"
+    "dev": "deno run --v8-flags=--max-old-space-size=8000 --config tsconfig.json --allow-all --watch src/app.ts"
   },
   "imports": { "@std/path": "jsr:@std/path@^1.0.6" }
 }

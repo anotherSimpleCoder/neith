@@ -11,13 +11,19 @@ export class NeithJSCompiler {
         }
 
         this.tsString += `\n${element.text}`
-        // const jsObj = await transform(element.text, {loader: 'ts', format: 'esm'})
-        // this.jsString += `\n${jsObj.code}`
     }
 
     addEventListener(id: string, event: string, method: string) {
         let code = `const element${this.counter} = document.getElementById('${id}');\n`;
         code += `element${this.counter}.addEventListener('${event}', ${method});\n`;
+
+        this.tsString += `\n${code}`
+        this.counter++
+    }
+
+    simpleBind(id: string, varname: string) {
+        let code = `const element${this.counter} = document.getElementById('${id}');\n`
+        code += `element${this.counter}.text = ${varname};`
 
         this.tsString += `\n${code}`
         this.counter++

@@ -15,6 +15,13 @@
 <div>
     <h1>hi</h1>
     <input type="text" bind:value="stat"/>
+    <p>{stat}</p>
 </div>
 
 <button on:click="()=>{submit()}">Submit</button>
+
+<style>
+    h1 {
+        font-weight: 200;
+    }
+</style>
