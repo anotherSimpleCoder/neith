@@ -14,6 +14,7 @@ This is currently a first prototype, which works in a very basic fashion, howeve
  - Custom components
  - Basic routing
  - handling props
+ - handling CSS
 
 ### TODO:
- - handling CSS (with plans to also enable SCSS support)
+ - SCSS support
