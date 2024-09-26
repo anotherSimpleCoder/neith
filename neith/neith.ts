@@ -63,9 +63,8 @@ export class Neith {
         const body = neith.indexDoc.getElementById('neith')
         if(!body) throw Error("RuntimeError: Invalid index.html file!")
         const domConstructed = neith.domConstruct(element, body)
-
         neith.cssCompiler.include(join(Deno.cwd(), 'src/style.css'))
-        //TODO: Deal with missing head
+        
         return {
             html: neith.render(body, domConstructed),
             css: neith.cssCompiler.code(),
@@ -209,45 +208,17 @@ export class Neith {
         }
 
         return htmlNode
-
-        // //Construct component html
-        // let html = ''
-        // const props = node.props.map(prop => (`${prop.name}=${prop.value}`)).join(' ')
-
-        // html += `<${node.tag}`
-        // if(props !== '') {
-        //     html += ` ${props}`
-        // }
-        // html += `>`
-
-        // html += node.text
-
-        // for(const child of node.children) {
-        //     html += this.render(child)
-        // }
-
-        // html += `</${node.tag}>`
-
-        // //Get index.html
-        // const indexHtml = new TextDecoder().decode(Deno.readFileSync(join(Deno.cwd(), 'src/index.html')))
-        // const indexDoc = new DOMParser().parseFromString(indexHtml, 'text/html')
-
-        // const neithBody = indexDoc.getElementById('neith')
-        // if(!neithBody) {
-        //     throw Error("Error: Invalid index.html!")
-        // }
-
-        // return html
     }
 
     private render(doc: Element, constructedElement: Element): string {
         doc.appendChild(constructedElement)
-        const html = doc.parentElement?.outerHTML
-        if(!html) {
-            throw Error("ConstructionError: Error while fetching HTML!")
+        const docElement = this.indexDoc.documentElement
+        
+        if(!docElement) {
+            throw Error("Runtime Error: Invalid index.html!")
         }
 
-        return html
+        return docElement.outerHTML
     }
 
     private construct(xmlObject: any, element: NeithElement): NeithElement {         
