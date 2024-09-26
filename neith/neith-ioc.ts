@@ -1,5 +1,10 @@
 import {NeithElement} from './neith.ts'
 
+export function Service(constr: any, huh: any) {
+    console.log(constr)
+    console.log(huh)
+}
+
 export class NeithIOC {
     private container: Map<string, any> = new Map()
 

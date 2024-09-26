@@ -394,10 +394,5 @@
     "https://denopkg.com/ThauEx/deno-fast-xml-parser@master/src/xmlNode.js": "efbdf148c536d9bf54a621aa6a15eedc6801976ee99b86395d182f062c282f50",
     "https://denopkg.com/ThauEx/deno-fast-xml-parser@master/src/xmlstr2xmlnode.js": "35640f96899a3b5eeff3137ddf2ec208d9d57e4cb130411a9606a417fa4214b3",
     "https://unpkg.com/sax-ts@1.2.8/src/sax.ts": "656083a3e07a3eab18eb45e3be40f163cf69507b7ebe5afb5fff48d3d2de4496"
-  },
-  "workspace": {
-    "dependencies": [
-      "jsr:@std/path@^1.0.6"
-    ]
   }
 }
