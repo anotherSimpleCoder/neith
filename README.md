@@ -13,7 +13,7 @@ This is currently a first prototype, which works in a very basic fashion, howeve
  - Typescript in components
  - Custom components
  - Basic routing
+ - handling props
 
 ### TODO:
- - handling props
  - handling CSS (with plans to also enable SCSS support)
