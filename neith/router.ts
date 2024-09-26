@@ -9,6 +9,7 @@ export interface Route {
 
 export class NeithRouter {
     routes: Map<string, string>
+    document: NeithComponent = {html: '', css: '', js: ''}
 
     constructor(
         routeArray: Route[]
@@ -24,12 +25,22 @@ export class NeithRouter {
     async route(req: Request): Promise<Response> {
         const url: URL = new URL(req.url)
 
+        if(url.pathname === '/style.css') {
+            const css = this.document.css
+            return new Response(new TextEncoder().encode(css))
+        }
+
+        if(url.pathname === '/script.js') {
+            const js = this.document.js
+            return new Response(new TextEncoder().encode(js))
+        }
+
         const documentPath = this.routes.get(url.pathname)
         if(!documentPath) {
             return new Response("404: Not Found!")
         }
-        const document = await Neith.build(documentPath)
+        this.document = await Neith.build(documentPath)
 
-        return new Response(new TextEncoder().encode(document.html))
+        return new Response(new TextEncoder().encode(this.document.html))
     }
 }

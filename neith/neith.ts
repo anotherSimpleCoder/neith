@@ -1,15 +1,17 @@
 import * as xml from "https://deno.land/x/xml@5.4.16/mod.ts";
-import {build, transform} from "https://deno.land/x/esbuild@v0.18.10/mod.js";
 import {JSDOM} from 'npm:jsdom'
-import { DOMParser, Element } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
+import { DOMParser, HTMLDocument, Element } from "jsr:@b-fuze/deno-dom";
 import { join, isAbsolute } from "@std/path";
 import { NeithComponent } from "./component.ts";
 import { NeithIOC } from "./neith-ioc.ts";
+import { NeithCLI } from "./neith.cli.ts";
+import { NeithServer } from "./server.ts";
+import { NeithRouter } from "./router.ts";
+import {routes} from '../src/routes.ts'
+import { NeithProp, isNeithProp, handleNeithProp } from "./neith-props.ts";
+import { NeithJSCompiler } from "./neith-js-compiler.ts";
+import { NeithCSSCompiler } from "./neith-css-compiler.ts";
 
-interface NeithProp {
-    name: string, 
-    value: string
-}
 
 export interface NeithElement {
     tag: string,
@@ -18,17 +20,16 @@ export interface NeithElement {
     children: NeithElement[],
 }
 
-const neithProps = new Map([
-    ['input', [/bind:value=\s*([^\s]+)/]],
-    ['button', [/on:click=\s*([^\s]+)/]]
-])
-
 export type NeithDocument = [string[], NeithElement]
 
 export class Neith {
     private componentFile: string
     private envDir: string = `${Deno.cwd()}/src`
+    private cssCompiler: NeithCSSCompiler = new NeithCSSCompiler()
+    private jsCompiler: NeithJSCompiler = new NeithJSCompiler()
     private static ioc: NeithIOC = new NeithIOC()
+
+    private indexDoc: HTMLDocument
     constructor(
         private componentDir: string,
     ) {
@@ -39,6 +40,16 @@ export class Neith {
         }
         
         this.componentDir = join(this.componentFile, '..')
+       
+        const file = Deno.readFileSync(join(Deno.cwd(), 'src/index.html'))
+        const content = new TextDecoder().decode(file)
+        this.indexDoc = new DOMParser().parseFromString(content, 'text/html')
+    }
+
+    static serve(port: number) {
+        NeithCLI.listen()
+        const server = new NeithServer(new NeithRouter(routes));
+        server.serve(port)
     }
 
     static async build(path: string): Promise<NeithComponent> {
@@ -49,12 +60,16 @@ export class Neith {
         await neith.setupIOC(directives)
         const element = neith.read(template)
         element.children = await Promise.all(element.children.map(async node => await neith.purify(node)))
-        
-        
+        const body = neith.indexDoc.getElementById('neith')
+        if(!body) throw Error("RuntimeError: Invalid index.html file!")
+        const domConstructed = neith.domConstruct(element, body)
+
+        neith.cssCompiler.include(join(Deno.cwd(), 'src/style.css'))
+        //TODO: Deal with missing head
         return {
-            html: neith.render(element),
-            css: '',
-            js: ''
+            html: neith.render(body, domConstructed),
+            css: neith.cssCompiler.code(),
+            js: await neith.jsCompiler.code()
         }
     }
 
@@ -161,14 +176,14 @@ export class Neith {
             pureNode.tag = 'div'
         }
 
-        for(const prop of node.props) {
-            if(this.isNeithProp(node.tag, `${prop.name}=${prop.value}`)) {
-                this.compileNeithProps(node)
-            }
+        if(node.tag === 'script') {
+            return this.compileTypescript(node)
         }
 
-        if(node.tag === 'script') {
-            return this.compileTypescript(node.text)
+        for(const prop of node.props) {
+            if(isNeithProp(node, prop)) {
+                handleNeithProp(node, prop, this.jsCompiler)
+            }
         }
 
         for(let i = 0; i < pureNode.children.length; i++) {
@@ -178,32 +193,58 @@ export class Neith {
         return pureNode
     }
 
-    render(node: NeithElement): string {
-        //Construct component html
-        let html = ''
-        const props = node.props.map(prop => (`${prop.name}=${prop.value}`)).join(' ')
-
-        html += `<${node.tag}`
-        if(props !== '') {
-            html += ` ${props}`
+    private domConstruct(node: NeithElement, _parent: Element): Element {
+        const htmlNode = this.indexDoc.createElement(node.tag)
+        htmlNode.textContent = node.text
+        for(const prop of node.props) {
+            if(isNeithProp(node, prop)) {
+                console.log(prop)
+            } else {
+                htmlNode.setAttribute(prop.name, prop.value)
+            }
         }
-        html += `>`
-
-        html += node.text
 
         for(const child of node.children) {
-            html += this.render(child)
+            htmlNode.appendChild(this.domConstruct(child, htmlNode))
         }
 
-        html += `</${node.tag}>`
+        return htmlNode
 
-        //Get index.html
-        const indexHtml = new TextDecoder().decode(Deno.readFileSync(join(Deno.cwd(), 'src/index.html')))
-        const indexDoc = new DOMParser().parseFromString(indexHtml, 'text/html')
+        // //Construct component html
+        // let html = ''
+        // const props = node.props.map(prop => (`${prop.name}=${prop.value}`)).join(' ')
 
-        const neithBody = indexDoc.getElementById('neith')
-        if(!neithBody) {
-            throw Error("Error: Invalid index.html!")
+        // html += `<${node.tag}`
+        // if(props !== '') {
+        //     html += ` ${props}`
+        // }
+        // html += `>`
+
+        // html += node.text
+
+        // for(const child of node.children) {
+        //     html += this.render(child)
+        // }
+
+        // html += `</${node.tag}>`
+
+        // //Get index.html
+        // const indexHtml = new TextDecoder().decode(Deno.readFileSync(join(Deno.cwd(), 'src/index.html')))
+        // const indexDoc = new DOMParser().parseFromString(indexHtml, 'text/html')
+
+        // const neithBody = indexDoc.getElementById('neith')
+        // if(!neithBody) {
+        //     throw Error("Error: Invalid index.html!")
+        // }
+
+        // return html
+    }
+
+    private render(doc: Element, constructedElement: Element): string {
+        doc.appendChild(constructedElement)
+        const html = doc.parentElement?.outerHTML
+        if(!html) {
+            throw Error("ConstructionError: Error while fetching HTML!")
         }
 
         return html
@@ -251,28 +292,17 @@ export class Neith {
         return !(element instanceof dom.window.HTMLUnknownElement)
     }
 
-    private isNeithProp(elementName: string, prop: string) {
-        const props =  neithProps.get(elementName)
-        if(!props) {
-            throw Error("SyntaxError: Wrong prop used for element " + elementName)
-        }
-
-        for(const neithProp of props) {
-            if(prop.match(neithProp))
-                return true
-        }
-
-        return false
-    }
-
-    private compileNeithProps(_element: NeithElement) {
-        throw Error("Not yet implemented!")
-    }
-
-    private async compileTypescript(typescript: string): Promise<NeithElement> {
+    private compileTypescript(node: NeithElement): NeithElement {
+        // return {
+        //     tag: 'script',
+        //     text: (await transform(typescript, {loader: 'ts', format: 'esm'})).code,
+        //     children: [],
+        //     props: []
+        // }
+        this.jsCompiler.handleScriptTag(node)
         return {
-            tag: 'script',
-            text: (await transform(typescript, {loader: 'ts', format: 'esm'})).code,
+            tag: 'div',
+            text: '',
             children: [],
             props: []
         }
