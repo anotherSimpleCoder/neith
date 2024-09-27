@@ -1,14 +1,18 @@
 @import('navbar.neith') as navbar
+@provide('test.ts') as huh
 
 <script lang="ts">
     class Person {
         constructor(private name: string) {}
     }
-    let stat: string = '';
+    let stat: string = 'huh'
+    let num: number = 0
     
     function submit() {
         console.log(stat)
     }
+
+    console.log("hi")
 </script>
 
 <navbar />

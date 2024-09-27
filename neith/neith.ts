@@ -83,6 +83,18 @@ export class Neith {
         Neith.ioc.injetable(alias, element)
     }
 
+    private provide(_alias: string, filename: string) {
+        let path = ''
+        if(!isAbsolute(filename)) {
+            path = join(this.componentDir, filename)
+        } else {
+            path = filename
+        }
+
+        const code = Deno.readTextFileSync(path)
+        this.jsCompiler.provideCode(code)
+    }
+
     openDocument() {
         const fileContents = Deno.readFileSync(this.componentFile)
         const content =  new TextDecoder().decode(fileContents)
@@ -132,17 +144,20 @@ export class Neith {
             }
 
             else if(directive.includes('@provide')) {
+                const aliasMatch = directive.match(/@provide\(['"].+?['"]\)\s+as\s+(\w+)/)
                 const matches = directive.match(/@provide\('([^']+)'\)/)
                 
                 if(!matches) {
                     throw Error("Syntax error: Invalid provide statement!")
                 }
 
+                if(!aliasMatch) {
+                    throw Error("Syntax error: Alias missing!")
+                }
+
                 const filename = matches[1]
-                const content = await Deno.readFile(join(this.envDir, filename))
-                // console.log(content)
-                
-                // this.container.set()
+                const alias = aliasMatch[1]
+                this.provide(alias, filename)
             }
 
             else {
