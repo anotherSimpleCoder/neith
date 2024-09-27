@@ -7,7 +7,7 @@ import { NeithIOC } from "./neith-ioc.ts";
 import { NeithCLI } from "./neith.cli.ts";
 import { NeithServer } from "./server.ts";
 import { NeithRouter } from "./router.ts";
-import {routes} from '../src/routes.ts'
+import {routes} from '../routes.ts'
 import { NeithProp, isNeithProp, handleNeithProp } from "./neith-props.ts";
 import { NeithJSCompiler } from "./neith-js-compiler.ts";
 import { NeithCSSCompiler } from "./neith-css-compiler.ts";
@@ -27,7 +27,6 @@ export class Neith {
     private envDir: string = `${Deno.cwd()}/src`
     private cssCompiler: NeithCSSCompiler = new NeithCSSCompiler()
     private jsCompiler: NeithJSCompiler = new NeithJSCompiler()
-    private static ioc: NeithIOC = new NeithIOC()
 
     private indexDoc: HTMLDocument
     constructor(
@@ -80,19 +79,12 @@ export class Neith {
         const element = neith.read(template)
 
         
-        Neith.ioc.injetable(alias, element)
+        NeithIOC.injetable(alias, element)
     }
 
-    private provide(_alias: string, filename: string) {
-        let path = ''
-        if(!isAbsolute(filename)) {
-            path = join(this.componentDir, filename)
-        } else {
-            path = filename
-        }
-
-        const code = Deno.readTextFileSync(path)
-        this.jsCompiler.provideCode(code)
+    private provide(serviceName: string) {
+        //const service = NeithIOC.inject(serviceName)
+        console.log(NeithIOC.container)
     }
 
     openDocument() {
@@ -119,7 +111,7 @@ export class Neith {
         ]
     }
 
-    async setupIOC(directives: string[]) {
+    setupIOC(directives: string[]) {
         for(const directive of directives) {
             if(directive.includes('@import')) {
                 const fileNameMatch = directive.match(/@import\('([^']+)'\)/)
@@ -144,20 +136,14 @@ export class Neith {
             }
 
             else if(directive.includes('@provide')) {
-                const aliasMatch = directive.match(/@provide\(['"].+?['"]\)\s+as\s+(\w+)/)
-                const matches = directive.match(/@provide\('([^']+)'\)/)
+                const matches = directive.match(/@provide\(([^']+)\)/)
                 
                 if(!matches) {
                     throw Error("Syntax error: Invalid provide statement!")
                 }
 
-                if(!aliasMatch) {
-                    throw Error("Syntax error: Alias missing!")
-                }
-
                 const filename = matches[1]
-                const alias = aliasMatch[1]
-                this.provide(alias, filename)
+                this.provide(filename)
             }
 
             else {
@@ -186,7 +172,7 @@ export class Neith {
     async purify(node: NeithElement): Promise<NeithElement>{
         let pureNode = node
         if(!this.isHTMLTag(node.tag)) {
-            pureNode = Neith.ioc.inject(node.tag)
+            pureNode = NeithIOC.inject(node.tag)
             pureNode.tag = 'div'
         }
 
