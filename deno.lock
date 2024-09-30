@@ -4,8 +4,9 @@
     "specifiers": {
       "jsr:@b-fuze/deno-dom": "jsr:@b-fuze/deno-dom@0.1.48",
       "jsr:@libs/typing@2": "jsr:@libs/typing@2.9.0",
-      "jsr:@std/path@^1.0.6": "jsr:@std/path@1.0.6",
+      "jsr:@std/path": "jsr:@std/path@1.0.6",
       "npm:fast-xml-parser": "npm:fast-xml-parser@4.5.0",
+      "npm:graphlib": "npm:graphlib@2.1.8",
       "npm:jsdom": "npm:jsdom@25.0.0",
       "npm:xml2js": "npm:xml2js@0.6.2",
       "npm:xml2json": "npm:xml2json@0.12.0"
@@ -93,6 +94,12 @@
           "mime-types": "mime-types@2.1.35"
         }
       },
+      "graphlib@2.1.8": {
+        "integrity": "sha512-jcLLfkpoVGmH7/InMC/1hIvOPSUh38oJtGhvrOFGzioE1DZ+0YW16RgmOJhHiuWTvGiJQ9Z1Ik43JvkRPRvE+A==",
+        "dependencies": {
+          "lodash": "lodash@4.17.21"
+        }
+      },
       "hoek@4.3.1": {
         "integrity": "sha512-v7E+yIjcHECn973i0xHm4kJkEpv3C8sbYS4344WXbzYqRyiDD7rjnnKo4hsJkejQBAFdRMUGNHySeSPKSH9Rqw==",
         "dependencies": {}
@@ -174,6 +181,10 @@
           "ws": "ws@8.18.0",
           "xml-name-validator": "xml-name-validator@5.0.0"
         }
+      },
+      "lodash@4.17.21": {
+        "integrity": "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==",
+        "dependencies": {}
       },
       "mime-db@1.52.0": {
         "integrity": "sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==",

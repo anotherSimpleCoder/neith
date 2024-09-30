@@ -1,4 +1,4 @@
-import {Route} from '../neith/router.ts'
+import {Route} from './neith/router.ts'
 
 export const routes: Route[] = [
     {
