@@ -1,5 +1,5 @@
 @import('navbar.neith') as navbar
-@provide('test.ts') as huh
+@provide(AuthService)
 
 <script lang="ts">
     class Person {
