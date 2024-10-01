@@ -25,7 +25,7 @@ export class DependencyGraph {
         }
     }
 
-    sort() {
+    sorted(): string[] {
         return graphlib.alg.topsort(this.graph)
     }
 }
