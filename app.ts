@@ -1,2 +1,6 @@
-import { DependencyResolver } from "./neith/dependencyResolver.ts";
-new DependencyResolver().resolve()
+import { NeithServer } from "./neith/server/server.ts";
+import { routes } from "./routes.ts";
+
+NeithServer
+    .fromRoutes(routes)
+    .serve(3000)

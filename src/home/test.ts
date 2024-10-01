@@ -1,6 +1,6 @@
-import { Service } from "../../neith/neith-ioc.ts";
-
-@Service
-export class AuthService {
-
+'@service'
+class GreetService {
+    greet() {
+        console.log("hello")
+    }
 }

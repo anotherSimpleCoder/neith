@@ -1,8 +1,8 @@
-import {Route} from './neith/router.ts'
+import {Route} from './neith/router/router.ts'
 
 export const routes: Route[] = [
     {
         path: '/',
-        component: 'home/home.neith'
+        component: 'app.neith'
     }
 ]
