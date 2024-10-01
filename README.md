@@ -18,4 +18,4 @@ This is currently a first prototype, which works in a very basic fashion, howeve
 
 ### TODO:
  - SCSS support
- - implement @provide directive for dependency injection of services
+ - variable binding in template file

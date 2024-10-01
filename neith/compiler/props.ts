@@ -1,5 +1,5 @@
-import {NeithElement} from './neith.ts'
-import {NeithJSCompiler} from './neith-js-compiler.ts'
+import {NeithElement, NeithProp} from '../index.ts'
+import {NeithJSCompiler} from './js.ts'
 import hash from "https://deno.land/x/object_hash@2.0.3.1/mod.ts";
 
 type propsObject = {
@@ -32,12 +32,6 @@ const neithProps = new Map([
     ['input', inputProps],
     ['button', buttonProps]
 ])
-
-
-export interface NeithProp {
-    name: string, 
-    value: string
-}
 
 export function isNeithProp(element: NeithElement, prop: NeithProp): boolean {
     const props = neithProps.get(element.tag)

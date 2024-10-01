@@ -1,12 +1,15 @@
+import { join } from "jsr:@std/path/join";
 import {transform} from "https://deno.land/x/esbuild@v0.18.10/mod.js";
-import { NeithElement } from "./neith.ts";
+import { NeithElement } from "../index.ts";
+
 
 export class NeithJSCompiler {
     private tsString: string = ''
+    private serviceCounter: number = 0
     private counter: number = 0
 
-    provideCode(code: string) {
-        this.tsString = code + this.tsString
+    provideService(alias: string, serviceName: string) {
+        this.tsString = `const ${alias} = NeithIOC.inject('${serviceName}');\n` + this.tsString
     }
 
     handleScriptTag(element: NeithElement) {
@@ -26,8 +29,6 @@ export class NeithJSCompiler {
                 }
                 const value = valueMatches[1]
                 const name = nameMatches[1]
-
- 
             }
         }
 
@@ -50,8 +51,8 @@ export class NeithJSCompiler {
         this.counter++
     }
 
-    async code(): Promise<string> {
+    async compile() {
         const js = await transform(this.tsString, {loader: 'ts', format: 'esm'})
-        return js.code
+        Deno.writeTextFileSync(join(Deno.cwd(), 'static/script.js'), js.code, {append: true})
     }
 }
