@@ -15,7 +15,7 @@ This is currently a first prototype, which works in a very basic fashion, howeve
  - Basic routing
  - handling props
  - handling CSS
+ - variable binding in template file (thanks to handlebars <3)
 
 ### TODO:
  - SCSS support
- - variable binding in template file

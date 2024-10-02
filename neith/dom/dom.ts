@@ -1,5 +1,5 @@
 import { DOMParser, HTMLDocument, Element } from "jsr:@b-fuze/deno-dom";
-import { NeithElement } from "../index.ts";
+import { NeithElement } from "../mod.ts";
 import { join } from "jsr:@std/path/join";
 import { isNeithProp } from "../compiler/props.ts";
 

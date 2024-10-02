@@ -1,4 +1,4 @@
-import { NeithElement } from "../index.ts";
+import { NeithElement } from "../mod.ts";
 
 export abstract class NeithComponent {
     constructor(

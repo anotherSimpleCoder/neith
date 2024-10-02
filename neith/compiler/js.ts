@@ -1,11 +1,12 @@
 import { join } from "jsr:@std/path/join";
 import {transform} from "https://deno.land/x/esbuild@v0.18.10/mod.js";
-import { NeithElement } from "../index.ts";
+import { NeithElement } from "../mod.ts";
+import { Document } from "jsr:@b-fuze/deno-dom";
 
 
 export class NeithJSCompiler {
     private tsString: string = ''
-    private serviceCounter: number = 0
+    private templateCounter: number = 0
     private counter: number = 0
 
     provideService(alias: string, serviceName: string) {
@@ -49,6 +50,19 @@ export class NeithJSCompiler {
 
         this.tsString += `\n${code}`
         this.counter++
+    }
+
+    handleBars(node: NeithElement) {
+        const id = node.props
+            .filter(prop => prop.name === 'id')[0]
+            .value
+
+        const varName = node.text.replace(/\{(\w+)\}/g, "$1")
+        const html = `<${node.tag}>{${node.text}}</${node.tag}>`
+        let code = `const template${this.templateCounter}=Handlebars.compile('${html}')\n`
+        code += `document.getElementById('${id}').innerHTML=template${this.templateCounter}({${varName} : ${varName}});`
+        this.tsString += `\n${code}`
+        node.tag = 'div'
     }
 
     async compile() {
