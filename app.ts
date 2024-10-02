@@ -1,4 +1,4 @@
-import { NeithServer } from "./neith/server/server.ts";
+import { NeithServer } from "./neith/mod.ts";
 import { routes } from "./routes.ts";
 
 NeithServer
