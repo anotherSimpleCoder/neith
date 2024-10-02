@@ -14,6 +14,10 @@ This is currently a first prototype, which works in a very basic fashion, howeve
 Feel free to contribute to the Neith project to enable easy web development for Deno and thus bringing not just Neith, but also Deno and it's community
 further <3
 
+Just contact me via:
+ - Email: mail.ampir3@gmail.com
+ - Discord: ampir3
+
 ### Currently implemented:
  - Typescript in components
  - Custom components
