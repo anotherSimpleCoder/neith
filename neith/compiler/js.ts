@@ -1,6 +1,6 @@
 import { join } from "jsr:@std/path/join";
 import {transform} from "https://deno.land/x/esbuild@v0.18.10/mod.js";
-import { NeithElement } from "../index.ts";
+import { NeithElement } from "../../mod.ts";;
 
 
 export class NeithJSCompiler {

@@ -3,7 +3,7 @@ import * as xml from "https://deno.land/x/xml@5.4.16/mod.ts";
 import {JSDOM} from 'npm:jsdom'
 import hash from "https://deno.land/x/object_hash@2.0.3.1/mod.ts";
 import { NeithComponent } from "./component.ts";
-import { NeithElement } from "../index.ts";
+import { NeithElement } from "../../mod.ts";
 import { handleNeithProp, isNeithProp } from "./props.ts";
 import { NeithJSCompiler } from "./js.ts";
 
