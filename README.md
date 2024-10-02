@@ -1,6 +1,10 @@
 ![](readme/title.png)
 
-# Neith
+
+<div style="display: flex; align-content: center; align-self: center;">
+    <img src="readme/logo.png" width="50" height="50"/>
+    <h1>Neith</h1>
+</div>
 A Deno-native frontend framework for making web development easier and enabling easy development of stable and maintainable web apps.
 
 ## Motivation
