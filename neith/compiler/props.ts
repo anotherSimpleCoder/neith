@@ -1,4 +1,4 @@
-import {NeithElement, NeithProp} from "../../mod.ts";
+import {NeithElement, NeithProp} from '../mod.ts'
 import {NeithJSCompiler} from './js.ts'
 import hash from "https://deno.land/x/object_hash@2.0.3.1/mod.ts";
 

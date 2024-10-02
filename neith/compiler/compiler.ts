@@ -3,7 +3,7 @@ import * as xml from "https://deno.land/x/xml@5.4.16/mod.ts";
 import {JSDOM} from 'npm:jsdom'
 import hash from "https://deno.land/x/object_hash@2.0.3.1/mod.ts";
 import { NeithComponent } from "./component.ts";
-import { NeithElement } from "../../mod.ts";
+import { NeithElement } from "../mod.ts";
 import { handleNeithProp, isNeithProp } from "./props.ts";
 import { NeithJSCompiler } from "./js.ts";
 
@@ -167,10 +167,12 @@ export class NeithCompiler {
         }
         
         if(node.text.match(/\{[^}]*\}/)) {
-            const varName = node.text.replace(/\{(\w+)\}/g, "$1")
-            const id = hash(varName)
+            // const varName = node.text.replace(/\{(\w+)\}/g, "$1")
+            const id = hash(node)
             node.props.push({name: 'id', value: id})
-            this.jsCompiler.simpleBind(id, varName)
+            // this.jsCompiler.simpleBind(id, varName)
+            // node.text = ''
+            this.jsCompiler.handleBars(node)
             node.text = ''
         }
 

@@ -2,7 +2,7 @@ import { join } from "jsr:@std/path/join";
 import {DependencyGraph} from '../ioc/dependencyGraph.ts'
 import { NeithComponent } from "../compiler/component.ts";
 import { NeithCompiler } from "../compiler/compiler.ts";
-import { NeithElement } from "../../mod.ts";
+import { NeithElement } from "../mod.ts";
 import { transform } from "https://deno.land/x/esbuild@v0.18.10/mod.js";
 import { NeithJSCompiler } from "../compiler/js.ts";
 
