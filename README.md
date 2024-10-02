@@ -9,13 +9,18 @@ Although there are many web frameworks out there, they are mostly for Node.js an
 
 This is currently a first prototype, which works in a very basic fashion, however improvements are in the works.
 
+## Contribution
+
+Feel free to contribute to the Neith project to enable easy web development for Deno and thus bringing not just Neith, but also Deno and it's community
+further <3
+
 ### Currently implemented:
  - Typescript in components
  - Custom components
  - Basic routing
  - handling props
  - handling CSS
- - variable binding in template file (thanks to handlebars <3)
+ - variable binding in template file (thanks to <a href="https://github.com/handlebars-lang/handlebars.js">handlebars</a> <3)
 
 ### TODO:
  - SCSS support
