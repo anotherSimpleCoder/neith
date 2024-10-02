@@ -12,6 +12,7 @@ export class NeithRouter {
     private ioc: NeithIOC
 
     private constructor(routes: Route[]) {
+        console.log("Building...")
         this.ioc = NeithIOC.init()
 
         routes
